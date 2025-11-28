@@ -1,0 +1,96 @@
+{
+  "almoco": [
+    {
+      "dia": "Segunda-feira",
+      "img": "/img/pratos/segunda-almoco.png",
+      "prato_principal": "Frango grelhado com arroz e feijão",
+      "vegetariano": "Lasanha de abobrinha",
+      "salada": "Alface e tomate",
+      "sobremesa": "Maçã",
+      "calorias": 650
+    },
+    {
+      "dia": "Terça-feira",
+      "img": "/img/pratos/terca-almoco.png",
+      "prato_principal": "Carne assada com arroz integral e feijão preto",
+      "vegetariano": "Grão-de-bico ao molho",
+      "salada": "Cenoura ralada e couve",
+      "sobremesa": "Banana",
+      "calorias": 720
+    },
+    {
+      "dia": "Quarta-feira",
+      "img": "/img/pratos/quarta-almoco.png",
+      "prato_principal": "Picadinho de carne com arroz e feijão carioca",
+      "vegetariano": "Tofu grelhado com legumes",
+      "salada": "Beterraba e acelga",
+      "sobremesa": "Laranja",
+      "calorias": 690
+    },
+    {
+      "dia": "Quinta-feira",
+      "img": "/img/pratos/quinta-almoco.png",
+      "prato_principal": "Frango ao molho com arroz e purê de batata",
+      "vegetariano": "Escondidinho de lentilha",
+      "salada": "Repolho e pepino",
+      "sobremesa": "Pudim",
+      "calorias": 750
+    },
+    {
+      "dia": "Sexta-feira",
+      "img": "/img/pratos/sexta-almoco.png",
+      "prato_principal": "Peixe grelhado com arroz e feijão",
+      "vegetariano": "Panqueca de espinafre",
+      "salada": "Alface americana e tomate cereja",
+      "sobremesa": "Gelatina",
+      "calorias": 680
+    }
+  ],
+  "jantar": [
+    {
+      "dia": "Segunda-feira",
+      "img": "/img/pratos/segunda-jantar.png",
+      "prato_principal": "Sopa de legumes com torradas",
+      "vegetariano": "Sopa de lentilha",
+      "salada": "Rúcula com cenoura",
+      "sobremesa": "Gelatina",
+      "calorias": 480
+    },
+    {
+      "dia": "Terça-feira",
+      "img": "/img/pratos/terca-jantar.png",
+      "prato_principal": "Macarrão ao molho sugo com carne moída",
+      "vegetariano": "Macarrão com proteína de soja",
+      "salada": "Alface e repolho",
+      "sobremesa": "Banana",
+      "calorias": 560
+    },
+    {
+      "dia": "Quarta-feira",
+      "img": "/img/pratos/quarta-jantar.png",
+      "prato_principal": "Arroz, feijão e omelete",
+      "vegetariano": "Omelete de legumes",
+      "salada": "Tomate e pepino",
+      "sobremesa": "Maçã",
+      "calorias": 520
+    },
+    {
+      "dia": "Quinta-feira",
+      "img": "/img/pratos/quinta-jantar.png",
+      "prato_principal": "Cuscuz paulista",
+      "vegetariano": "Cuscuz vegetariano",
+      "salada": "Couve e cenoura",
+      "sobremesa": "Pudim",
+      "calorias": 600
+    },
+    {
+      "dia": "Sexta-feira",
+      "img": "/img/pratos/sexta-jantar.png",
+      "prato_principal": "Arroz com estrogonofe de frango",
+      "vegetariano": "Estrogonofe de grão-de-bico",
+      "salada": "Mix de folhas",
+      "sobremesa": "Laranja",
+      "calorias": 630
+    }
+  ]
+}
