@@ -1,0 +1,29 @@
+{
+  "produtos": [
+    {
+      "id": "1",
+      "nome": "Arroz, Feijão e Frango",
+      "preco": 5,
+      "disponivel": true
+    },
+    {
+      "id": "2",
+      "nome": "Opção Vegana: Soja",
+      "preco": 5,
+      "disponivel": false
+    },
+    {
+      "nome": "Peixe frito, açaí",
+      "preco": 5,
+      "disponivel": true,
+      "id": "2ANNl82Gdr0"
+    },
+    {
+      "nome": "Caldeirada de peixe, suco de cupuaçú",
+      "preco": 5,
+      "disponivel": true,
+      "id": "j5fxaiXpSL8"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
