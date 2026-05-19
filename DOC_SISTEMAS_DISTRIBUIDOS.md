@@ -17,12 +17,12 @@ A ideia central é manter o frontend hospedado de forma estática (por exemplo, 
 
 ```mermaid
 graph LR
-  Browser[Usuário / Navegador] --> ReactApp[Frontend React (Vite)]
-  ReactApp --> APIGW[Amazon API Gateway]
-  APIGW --> Lambda[AWS Lambda (/pagamento)]
-  Lambda --> QR[Retorna qrcode_url]
-  ReactApp --> ApiConfig[src/apiConfig.js]
-  ReactApp --> Vercel[Frontend hospedado em Vercel]
+  Browser["Usuário / Navegador"] --> ReactApp["Frontend React (Vite)"]
+  ReactApp --> APIGW["Amazon API Gateway"]
+  APIGW --> Lambda["AWS Lambda (/pagamento)"]
+  Lambda --> QR["Retorna qrcode_url"]
+  ReactApp --> ApiConfig["src/apiConfig.js"]
+  ReactApp --> Vercel["Frontend hospedado em Vercel"]
 ```
 
 ### Componentes principais

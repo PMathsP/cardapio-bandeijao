@@ -18,12 +18,12 @@ O projeto está organizado em componentes e páginas React sob `src/`.
 
 ```mermaid
 graph LR
-  Browser[Usuário / Navegador] --> ReactApp[Frontend React (Vite)]
-  ReactApp --> CRUD[CRUD em src/pages/TabelaCRUD.jsx]
-  CRUD --> JsonServer[json-server local]
-  JsonServer --> DB[db.json]
-  ReactApp --> Gemini[Google Gemini API]
-  Gemini --> IA[Sugestões de cardápio com IA]
+  Browser["Usuário / Navegador"] --> ReactApp["Frontend React (Vite)"]
+  ReactApp --> CRUD["CRUD em src/pages/TabelaCRUD.jsx"]
+  CRUD --> JsonServer["json-server local"]
+  JsonServer --> DB["db.json"]
+  ReactApp --> Gemini["Google Gemini API"]
+  Gemini --> IA["Sugestões de cardápio com IA"]
 ```
 
 ### Página principal de CRUD
