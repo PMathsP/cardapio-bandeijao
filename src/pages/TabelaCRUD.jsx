@@ -16,12 +16,19 @@ export default function TabelaCRUD() {
   // ==========================================
   const buscarProdutos = async () => {
     try {
-      // CORRIGIDO: Utiliza diretamente a API_URL definida no apiConfig
       const response = await fetch(API_URL);
       const data = await response.json();
-      setProdutos(data);
+      
+      // PROTEÇÃO: Garante que o estado só mude se o back-end retornar uma lista real
+      if (Array.isArray(data)) {
+        setProdutos(data);
+      } else {
+        console.error("A API não retornou uma lista válida:", data);
+        setProdutos([]); // Reseta para lista vazia para evitar quebras
+      }
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
+      setProdutos([]);
     }
   };
 
@@ -40,7 +47,6 @@ export default function TabelaCRUD() {
     };
 
     try {
-      // CORRIGIDO: Utiliza diretamente a API_URL para o método POST
       await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,7 +64,6 @@ export default function TabelaCRUD() {
 
   const handleExcluir = async (id) => {
     try {
-      // CORRIGIDO: Concatenando a barra de rota '/' antes do ID do produto
       await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       buscarProdutos();
     } catch (error) {
@@ -67,11 +72,12 @@ export default function TabelaCRUD() {
   };
 
   const handleMudarStatus = async (produto) => {
+    // Suporta tanto o id padrão quanto o _id do MongoDB
+    const idProduto = produto.id || produto._id;
     const produtoAtualizado = { ...produto, disponivel: !produto.disponivel };
     
     try {
-      // CORRIGIDO: Concatenando a barra de rota '/' antes do ID do produto
-      await fetch(`${API_URL}/${produto.id}`, {
+      await fetch(`${API_URL}/${idProduto}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(produtoAtualizado)
@@ -114,7 +120,7 @@ export default function TabelaCRUD() {
   };
 
   // ==========================================
-  // 3. INTERFACE (Padronizada em formato de Card)
+  // 3. INTERFACE (Com tabela protegida contra falhas)
   // ==========================================
   return (
     <div className="crud-card">
@@ -175,7 +181,7 @@ export default function TabelaCRUD() {
         </button>
       </form>
 
-      {/* --- SESSÃO DE LISTAGEM --- */}
+      {/* --- SESSÃO DE LISTAGEM PROTEGIDA --- */}
       <table className="crud-table">
         <thead>
           <tr>
@@ -186,15 +192,16 @@ export default function TabelaCRUD() {
           </tr>
         </thead>
         <tbody>
-          {produtos.length === 0 ? (
+          {/* RENDEREZAÇÃO SEGURA: Se não for array ou estiver vazia, não quebra a tela */}
+          {!Array.isArray(produtos) || produtos.length === 0 ? (
             <tr>
               <td colSpan="4" style={{ textAlign: "center", color: "#888", padding: "20px" }}>
-                Nenhum prato cadastrado no cardápio.
+                Nenhum prato localizado no cardápio ou falha de comunicação com o servidor.
               </td>
             </tr>
           ) : (
             produtos.map((p) => (
-              <tr key={p.id}>
+              <tr key={p.id || p._id}>
                 <td style={{ fontWeight: "600" }}>{p.nome}</td>
                 <td>R$ {parseFloat(p.preco).toFixed(2)}</td>
                 <td>
@@ -207,7 +214,7 @@ export default function TabelaCRUD() {
                 </td>
                 <td>
                   <button 
-                    onClick={() => handleExcluir(p.id)}
+                    onClick={() => handleExcluir(p.id || p._id)}
                     style={{ background: "#dc3545", color: "white", border: "none", padding: "6px 12px", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}
                   >
                     🗑️ Excluir
