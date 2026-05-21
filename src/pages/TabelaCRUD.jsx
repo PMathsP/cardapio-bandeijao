@@ -19,12 +19,11 @@ export default function TabelaCRUD() {
       const response = await fetch(API_URL);
       const data = await response.json();
       
-      // PROTEÇÃO: Garante que o estado só mude se o back-end retornar uma lista real
       if (Array.isArray(data)) {
         setProdutos(data);
       } else {
         console.error("A API não retornou uma lista válida:", data);
-        setProdutos([]); // Reseta para lista vazia para evitar quebras
+        setProdutos([]);
       }
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
@@ -63,28 +62,44 @@ export default function TabelaCRUD() {
   };
 
   const handleExcluir = async (id) => {
+    if (!id) return alert("ID do produto inválido para exclusão.");
+    
     try {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      // CORRIGIDO: Agora enviando o ID de forma explícita para o endpoint
+      const response = await fetch(`${API_URL}/${id}`, { 
+        method: "DELETE" 
+      });
+      
+      if (!response.ok) throw new Error("Erro na resposta do servidor AWS (CORS ou Lambda).");
       buscarProdutos();
     } catch (error) {
       console.error("Erro ao excluir produto:", error);
+      alert("Ops! Falha ao excluir o produto. Verifique as configurações de CORS na AWS.");
     }
   };
 
   const handleMudarStatus = async (produto) => {
-    // Suporta tanto o id padrão quanto o _id do MongoDB
-    const idProduto = produto.id || produto._id;
-    const produtoAtualizado = { ...produto, disponivel: !produto.disponivel };
+    // CORRIGIDO: Mapeia estritamente para o ID padrão do MongoDB (_id)
+    const idProduto = produto._id || produto.id;
+    if (!idProduto) return alert("ID do produto não encontrado.");
+
+    const produtoAtualizado = { 
+      ...produto, 
+      disponivel: !produto.disponivel 
+    };
     
     try {
-      await fetch(`${API_URL}/${idProduto}`, {
+      const response = await fetch(`${API_URL}/${idProduto}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(produtoAtualizado)
       });
+
+      if (!response.ok) throw new Error("Erro na resposta do servidor AWS (CORS ou Lambda).");
       buscarProdutos();
     } catch (error) {
       console.error("Erro ao mudar status do produto:", error);
+      alert("Ops! Falha ao atualizar o status. Verifique as configurações de CORS na AWS.");
     }
   };
 
@@ -120,7 +135,7 @@ export default function TabelaCRUD() {
   };
 
   // ==========================================
-  // 3. INTERFACE (Com tabela protegida contra falhas)
+  // 3. INTERFACE (Mapeada para ler o _id da AWS)
   // ==========================================
   return (
     <div className="crud-card">
@@ -181,7 +196,7 @@ export default function TabelaCRUD() {
         </button>
       </form>
 
-      {/* --- SESSÃO DE LISTAGEM PROTEGIDA --- */}
+      {/* --- SESSÃO DE LISTAGEM --- */}
       <table className="crud-table">
         <thead>
           <tr>
@@ -192,7 +207,6 @@ export default function TabelaCRUD() {
           </tr>
         </thead>
         <tbody>
-          {/* RENDEREZAÇÃO SEGURA: Se não for array ou estiver vazia, não quebra a tela */}
           {!Array.isArray(produtos) || produtos.length === 0 ? (
             <tr>
               <td colSpan="4" style={{ textAlign: "center", color: "#888", padding: "20px" }}>
@@ -201,7 +215,8 @@ export default function TabelaCRUD() {
             </tr>
           ) : (
             produtos.map((p) => (
-              <tr key={p.id || p._id}>
+              // CORRIGIDO: Utiliza o _id vindo do MongoDB Atlas como chave do loop
+              <tr key={p._id || p.id}>
                 <td style={{ fontWeight: "600" }}>{p.nome}</td>
                 <td>R$ {parseFloat(p.preco).toFixed(2)}</td>
                 <td>
@@ -214,7 +229,8 @@ export default function TabelaCRUD() {
                 </td>
                 <td>
                   <button 
-                    onClick={() => handleExcluir(p.id || p._id)}
+                    // CORRIGIDO: Passa estritamente o _id gerado pela AWS/MongoDB para a exclusão
+                    onClick={() => handleExcluir(p._id || p.id)}
                     style={{ background: "#dc3545", color: "white", border: "none", padding: "6px 12px", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}
                   >
                     🗑️ Excluir
