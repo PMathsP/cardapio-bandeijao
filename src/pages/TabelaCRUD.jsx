@@ -15,9 +15,14 @@ export default function TabelaCRUD() {
   // 1. OPERAÇÕES DE CRUD (Disciplina de Web)
   // ==========================================
   const buscarProdutos = async () => {
-    const response = await fetch(`${API_URL}/produtos`);
-    const data = await response.json();
-    setProdutos(data);
+    try {
+      // CORRIGIDO: Utiliza diretamente a API_URL definida no apiConfig
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setProdutos(data);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+    }
   };
 
   useEffect(() => {
@@ -34,30 +39,47 @@ export default function TabelaCRUD() {
       disponivel: true
     };
 
-    await fetch(`${API_URL}/produtos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(novoProduto)
-    });
+    try {
+      // CORRIGIDO: Utiliza diretamente a API_URL para o método POST
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(novoProduto)
+      });
 
-    setNome("");
-    setPreco("");
-    buscarProdutos();
+      setNome("");
+      setPreco("");
+      buscarProdutos();
+    } catch (error) {
+      console.error("Erro ao cadastrar produto:", error);
+      alert("Erro ao salvar o prato na nuvem.");
+    }
   };
 
   const handleExcluir = async (id) => {
-    await fetch(`${API_URL}/produtos/${id}`, { method: "DELETE" });
-    buscarProdutos();
+    try {
+      // CORRIGIDO: Concatenando a barra de rota '/' antes do ID do produto
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      buscarProdutos();
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+    }
   };
 
   const handleMudarStatus = async (produto) => {
     const produtoAtualizado = { ...produto, disponivel: !produto.disponivel };
-    await fetch(`${API_URL}/produtos/${produto.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(produtoAtualizado)
-    });
-    buscarProdutos();
+    
+    try {
+      // CORRIGIDO: Concatenando a barra de rota '/' antes do ID do produto
+      await fetch(`${API_URL}/${produto.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(produtoAtualizado)
+      });
+      buscarProdutos();
+    } catch (error) {
+      console.error("Erro ao mudar status do produto:", error);
+    }
   };
 
   // ==========================================
