@@ -1,13 +1,41 @@
 /* ---- Layout Geral ---- */
 html, body, #root {
   height: 100%;
-  margin: 0;
 }
 
 body {
   margin: 0;
   background: #f5f5f5;
   font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Container principal com flexbox */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Garante tamanho total da janela do navegador */
+}
+
+.content-wrapper {
+  flex: 1 0 auto; /* Ocupa todo o espaço vertical disponível, empurrando o footer para baixo */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content-wrapper main {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Container com largura máxima */
@@ -17,23 +45,10 @@ body {
   padding: 30px;
 }
 
-/* Container principal com flexbox */
-.container-principal {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.container-principal main {
-  flex: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px;
-  width: 100%;
-}
-
 /* ---- Header ---- */
 .header {
+  width: 100%;
+  box-sizing: border-box;
   background: white;
   padding: 18px 40px;
   border-bottom: 1px solid #ddd;
@@ -60,30 +75,16 @@ body {
   font-weight: 600;
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-  }
-
-  .menu a {
-    margin: 10px;
-    display: inline-block;
-  }
-
-  .card-dia {
-    width: 95% !important;
-  }
-}
-
-
-/* ---- Footer ---- */
+/* ---- Footer (Unificado e Corrigido) ---- */
 .footer {
+  width: 100%;
+  box-sizing: border-box;
   background: white;
   padding: 20px;
   border-top: 1px solid #ddd;
   text-align: center;
-  margin-top: 40px;
+  margin-top: auto; /* Empurra o footer para o final se a página tiver pouco conteúdo */
+  flex-shrink: 0;   /* Impede que o footer seja esmagado */
 }
 
 /* ---- Carousel ---- */
@@ -171,103 +172,6 @@ body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsividade para tablets e telas médias */
-@media (max-width: 900px) {
-  .carousel-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .carousel-cards-wrapper {
-    gap: 15px;
-  }
-
-  .card-dia {
-    width: 320px;
-  }
-
-  .carousel-btn {
-    padding: 10px 14px;
-    font-size: 18px;
-  }
-}
-
-/* Responsividade para celulares */
-@media (max-width: 768px) {
-  .carousel-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .carousel-cards-wrapper {
-    gap: 12px;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .carousel-item {
-    width: 100%;
-    max-width: 280px;
-  }
-
-  .card-dia {
-    width: 100%;
-    max-width: 280px;
-    padding: 20px;
-  }
-
-  .carousel-btn {
-    padding: 10px 12px;
-    font-size: 16px;
-    align-self: center;
-  }
-}
-
-/* Responsividade para celulares pequenos */
-@media (max-width: 480px) {
-  .carousel-container {
-    gap: 12px;
-    padding: 0 10px;
-  }
-
-  .carousel-cards-wrapper {
-    gap: 10px;
-    padding: 0 10px;
-  }
-
-  .carousel-item {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .card-dia {
-    width: 100%;
-    max-width: 100%;
-    padding: 15px;
-  }
-
-  .card-dia h3 {
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
-
-  .card-dia p {
-    font-size: 14px;
-    margin: 6px 0;
-  }
-
-  .calorias {
-    font-size: 14px;
-    padding: 8px;
-    margin-top: 10px;
-  }
-
-  .carousel-btn {
-    padding: 8px 10px;
-    font-size: 14px;
-  }
-}
-
 .card-dia h3 {
   margin-top: 0;
 }
@@ -287,7 +191,7 @@ body {
   margin-bottom: 12px;
 }
 
-
+/* ---- Dark Mode ---- */
 body.dark {
   background: #111;
   color: white;
@@ -321,6 +225,7 @@ body.dark .calorias {
   to   { opacity: 1; transform: scale(1); }
 }
 
+/* ---- Seções de Refeição ---- */
 .section-refeicao {
   margin-top: 30px;
   background: white;
@@ -488,3 +393,347 @@ body.dark .recarga-form input {
   border-color: #444;
 }
 
+/* ---- CRUD Form em formato de Card ---- */
+.crud-card {
+  max-width: 700px; /* Um pouco mais largo que o de recarga para acomodar bem a tabela */
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 3px 8px #0002;
+  box-sizing: border-box;
+}
+
+.crud-card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Ajustes internos para os inputs do CRUD ficarem padronizados */
+.crud-inputs-group {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.crud-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.crud-card label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.crud-card input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.crud-card .btn-cadastrar {
+  width: 100%;
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.crud-card .btn-cadastrar:hover {
+  background: #45a049;
+}
+
+/* Suporte ao Modo Escuro para o Card do CRUD */
+body.dark .crud-card {
+  background: #222;
+  color: white;
+}
+
+body.dark .crud-card label,
+body.dark .crud-card h2 {
+  color: white;
+}
+
+body.dark .crud-card input {
+  background: #333;
+  color: white;
+  border-color: #444;
+}
+
+/* Estilização da tabela interna para casar com o design do card */
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+}
+
+.crud-table th, .crud-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+body.dark .crud-table th, body.dark .crud-table td {
+  border-bottom-color: #333;
+}
+
+/* Container de Resposta da IA */
+.ia-resposta-box {
+  background: #f9f9f9;
+  color: #333;
+  padding: 15px;
+  margin-top: 20px;
+  white-space: pre-wrap;
+  font-family: Arial, sans-serif;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.ia-description {
+  color: #666;
+}
+
+/* Regras de Adaptação para o Modo Escuro */
+body.dark .ia-resposta-box {
+  background: #2b2b2b;
+  color: #f0f0f0;
+  border-color: #444;
+}
+
+body.dark .ia-description {
+  color: #bbb;
+}
+
+/* ---- Sobre Page ---- */
+.sobre-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sobre-blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.discipline-block {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.discipline-block h3 {
+  margin-top: 0;
+  color: #2b2b2b;
+}
+
+.discipline-block p {
+  color: #444;
+}
+
+.discipline-block ul {
+  margin-top: 12px;
+}
+
+.diagram pre.mermaid {
+  background: #0f1724;
+  color: #e6eef8;
+  padding: 12px;
+  border-radius: 8px;
+  overflow: auto;
+  font-size: 13px;
+}
+
+.about-summary {
+  margin-top: 26px;
+  background: white;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+}
+
+body.dark .discipline-block,
+body.dark .about-summary {
+  background: #222;
+  color: white;
+}
+
+body.dark .discipline-block h3,
+body.dark .discipline-block p {
+  color: white;
+}
+
+/* ==========================================
+   CORREÇÃO DOS TÍTULOS DA PÁGINA HOME (MODO ESCURO)
+   ========================================== */
+
+/* Corrige o h2 principal da Home e todos os h3 das seções de refeição/dashboard */
+body.dark h2,
+body.dark h3,
+body.dark .section-refeicao h3,
+body.dark .dashboard h3 {
+  color: #ffffff !important;
+}
+
+/* Aproveitando para garantir o contraste dos textos menores da Home */
+body.dark .horario-texto {
+  color: #cccccc !important;
+}
+
+body.dark .dashboard p {
+  color: #dddddd;
+}
+
+/* ==========================================
+   FIX: BOTÃO DE PAGAMENTO (MODO CLARO E ESCURO)
+   ========================================== */
+
+/* Força o botão de gerar QR code a manter o verde original no modo claro */
+.recarga-form button,
+.recarga-form .btn-pagamento {
+  background-color: #4CAF50 !important;
+  color: white !important;
+  transition: background-color 0.3s ease;
+}
+
+/* Efeito Hover para manter o feedback visual ao passar o mouse */
+.recarga-form button:hover,
+.recarga-form .btn-pagamento:hover {
+  background-color: #45a049 !important;
+}
+
+/* Garante que o modo escuro NÃO quebre a cor verde do botão de pagamento */
+body.dark .recarga-form button,
+body.dark .recarga-form .btn-pagamento {
+  background-color: #4CAF50 !important;
+  color: #ffffff !important;
+}
+
+/* Caso o botão de copiar código PIX precise continuar azul ou cinza, 
+   podemos isolar a exceção dele para não misturar as cores */
+.recarga-form .copy-btn {
+  background-color: #4285f4 !important;
+}
+body.dark .recarga-form .copy-btn {
+  background-color: #357ae8 !important;
+}
+
+/* ---- Responsividade (Media Queries Combinadas) ---- */
+@media (max-width: 900px) {
+  .sobre-blocks {
+    grid-template-columns: 1fr;
+  }
+  
+  .carousel-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .carousel-cards-wrapper {
+    gap: 15px;
+  }
+
+  .card-dia {
+    width: 320px;
+  }
+
+  .carousel-btn {
+    padding: 10px 14px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .menu a {
+    margin: 10px;
+    display: inline-block;
+  }
+
+  .carousel-cards-wrapper {
+    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .carousel-item {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .card-dia {
+    width: 95% !important;
+    max-width: 280px;
+    padding: 20px;
+  }
+
+  .carousel-btn {
+    padding: 10px 12px;
+    font-size: 16px;
+    align-self: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-container {
+    gap: 12px;
+    padding: 0 10px;
+  }
+
+  .carousel-cards-wrapper {
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .carousel-item {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .card-dia {
+    width: 100% !important;
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .card-dia h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .card-dia p {
+    font-size: 14px;
+    margin: 6px 0;
+  }
+
+  .calorias {
+    font-size: 14px;
+    padding: 8px;
+    margin-top: 10px;
+  }
+
+  .carousel-btn {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}

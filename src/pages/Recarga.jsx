@@ -18,7 +18,7 @@ export default function Recarga() {
     // --- NOVA LÓGICA COM AWS LAMBDA ---
     try {
       // Substitua pela sua URL do API Gateway (sem o /pagamento no final)
-      const API_URL = "https://um4of5exti.execute-api.us-east-1.amazonaws.com/deploy-02";
+      const API_URL = "https://um4of5exti.execute-api.us-east-1.amazonaws.com/deploy-03/pagamento";
       
       const response = await fetch(`${API_URL}/pagamento`);
       const data = await response.json();

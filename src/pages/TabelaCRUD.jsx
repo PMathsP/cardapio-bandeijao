@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { API_URL } from "../apiConfig"; // Chave de trilho (Sistemas Distribuídos vs Web)
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Importação da IA
 
 export default function TabelaCRUD() {
   // Estados do CRUD
@@ -62,78 +61,101 @@ export default function TabelaCRUD() {
   };
 
   // ==========================================
-  // 2. INTEGRAÇÃO COM IA (API Google Gemini)
+  // 2. INTEGRAÇÃO COM IA (API Gateway + Lambda AWS)
   // ==========================================
   const gerarSugestaoComIA = async () => {
     setCarregandoIA(true);
-    setSugestaoIA("Pensando em opções deliciosas...");
+    setSugestaoIA("Consultando o Nutricionista IA na AWS...");
     
     try {
-      // ATENÇÃO: Cole sua chave do Google AI Studio aqui dentro das aspas!
-      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
       const prompt = "Aja como um nutricionista de um restaurante universitário (bandejão). Sugira apenas os nomes e preços justos de 3 opções completas de pratos (incluindo uma vegana) para o almoço de hoje. Formate em texto simples.";
+      
+      const URL_API_GATEWAY = "https://um4of5exti.execute-api.us-east-1.amazonaws.com/deploy-03/cardapio";
+      
+      const resp = await fetch(URL_API_GATEWAY, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
 
-      const result = await model.generateContent(prompt);
-      setSugestaoIA(result.response.text());
+      if (!resp.ok) throw new Error('Falha ao chamar a infraestrutura Serverless');
+      const data = await resp.json();
+      
+      setSugestaoIA(data.text); 
+      
     } catch (error) {
-      console.error("Erro na IA:", error);
-      setSugestaoIA("Ops! Falha ao conectar com a IA. Verifique sua chave API.");
+      console.error("Erro na IA Distribuída:", error);
+      setSugestaoIA("Ops! Falha ao conectar com o serviço de IA na nuvem AWS.");
     } finally {
       setCarregandoIA(false);
     }
   };
 
   // ==========================================
-  // 3. INTERFACE (O que aparece na tela)
+  // 3. INTERFACE (Padronizada em formato de Card)
   // ==========================================
   return (
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+    <div className="crud-card">
       <h2>Gerenciar Cardápio (CRUD & IA)</h2>
 
       {/* --- SESSÃO DA INTELIGÊNCIA ARTIFICIAL --- */}
-      <div style={{ background: "#e8f0fe", padding: "15px", borderRadius: "8px", marginBottom: "20px" }}>
+      <div className="qrcode-area" style={{ marginTop: "0", marginBottom: "30px" }}>
         <h3>✨ Assistente de Cardápio com IA</h3>
-        <p>Sem ideias para o prato de hoje? Deixe a Inteligência Artificial sugerir!</p>
+        <p className="ia-description" style={{ margin: "10px 0 20px 0" }}>
+          Sem ideias para o prato de hoje? Deixe a Inteligência Artificial sugerir!
+        </p>
+        
         <button 
+          className="copy-btn"
+          style={{ background: "#4285f4", marginTop: "0" }}
           onClick={gerarSugestaoComIA} 
           disabled={carregandoIA}
-          style={{ background: "#4285f4", color: "white", padding: "10px", border: "none", borderRadius: "5px", cursor: "pointer" }}
         >
           {carregandoIA ? "Consultando Nutricionista IA..." : "Gerar Sugestões de Pratos"}
         </button>
         
         {sugestaoIA && (
-          <pre style={{ background: "white", padding: "15px", marginTop: "15px", whiteSpace: "pre-wrap", fontFamily: "sans-serif", borderRadius: "5px", border: "1px solid #ccc" }}>
+          <pre className="ia-resposta-box animated">
             {sugestaoIA}
           </pre>
         )}
       </div>
 
-      {/* --- SESSÃO DE CADASTRO (CREATE) --- */}
-      <form onSubmit={handleCadastrar} style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
-        <input 
-          placeholder="Nome do prato (ex: Feijoada)" 
-          value={nome} 
-          onChange={(e) => setNome(e.target.value)} 
-          style={{ flex: 1, padding: "8px" }}
-        />
-        <input 
-          type="number" 
-          placeholder="Preço (R$)" 
-          value={preco} 
-          onChange={(e) => setPreco(e.target.value)} 
-          style={{ width: "120px", padding: "8px" }}
-        />
-        <button type="submit" style={{ padding: "8px 15px", background: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
-          Cadastrar
+      <hr style={{ border: "0", borderTop: "1px solid #eee", margin: "25px 0" }} />
+
+      {/* --- SESSÃO DE CADASTRO --- */}
+      <form onSubmit={handleCadastrar} className="recarga-form" style={{ boxShadow: "none", padding: "0", maxWidth: "100%" }}>
+        <div className="crud-inputs-group">
+          <div className="crud-field">
+            <label>Nome do prato:</label>
+            <input 
+              type="text"
+              placeholder="Ex: Feijoada" 
+              value={nome} 
+              onChange={(e) => setNome(e.target.value)} 
+            />
+          </div>
+          
+          <div className="crud-field" style={{ flex: "0 0 150px" }}>
+            <label>Preço (R$):</label>
+            <input 
+              type="number" 
+              step="0.01"
+              placeholder="0,00" 
+              value={preco} 
+              onChange={(e) => setPreco(e.target.value)} 
+            />
+          </div>
+        </div>
+
+        <button type="submit" className="btn-cadastrar">
+          ➕ Cadastrar Novo Prato
         </button>
       </form>
 
-      {/* --- SESSÃO DE LISTAGEM (READ, UPDATE, DELETE) --- */}
-      <table border="1" cellPadding="10" style={{ width: "100%", textAlign: "left", borderCollapse: "collapse" }}>
-        <thead style={{ background: "#f4f4f4" }}>
+      {/* --- SESSÃO DE LISTAGEM --- */}
+      <table className="crud-table">
+        <thead>
           <tr>
             <th>Prato</th>
             <th>Preço</th>
@@ -143,16 +165,20 @@ export default function TabelaCRUD() {
         </thead>
         <tbody>
           {produtos.length === 0 ? (
-            <tr><td colSpan="4" style={{ textAlign: "center" }}>Nenhum prato cadastrado.</td></tr>
+            <tr>
+              <td colSpan="4" style={{ textAlign: "center", color: "#888", padding: "20px" }}>
+                Nenhum prato cadastrado no cardápio.
+              </td>
+            </tr>
           ) : (
             produtos.map((p) => (
               <tr key={p.id}>
-                <td>{p.nome}</td>
+                <td style={{ fontWeight: "600" }}>{p.nome}</td>
                 <td>R$ {parseFloat(p.preco).toFixed(2)}</td>
                 <td>
                   <button 
                     onClick={() => handleMudarStatus(p)}
-                    style={{ background: "none", border: "1px solid #ccc", padding: "5px", borderRadius: "3px", cursor: "pointer" }}
+                    style={{ background: "none", border: "1px solid #ddd", padding: "6px 10px", borderRadius: "20px", cursor: "pointer", fontSize: "14px" }}
                   >
                     {p.disponivel ? "🟢 Disponível" : "🔴 Esgotado"}
                   </button>
@@ -160,7 +186,7 @@ export default function TabelaCRUD() {
                 <td>
                   <button 
                     onClick={() => handleExcluir(p.id)}
-                    style={{ background: "#dc3545", color: "white", border: "none", padding: "5px 10px", borderRadius: "3px", cursor: "pointer" }}
+                    style={{ background: "#dc3545", color: "white", border: "none", padding: "6px 12px", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}
                   >
                     🗑️ Excluir
                   </button>

@@ -13,17 +13,19 @@ import "./styles.css";
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="container-principal">
+      <div className="app-shell">
         <Header />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sobre" element={<Sobre />} />
-            <Route path="/admin" element={<TabelaCRUD />} />
-            <Route path="/recarga" element={<Recarga />} />
-          </Routes>
-        </main>
+        <div className="content-wrapper">
+          <main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/sobre" element={<Sobre />} />
+              <Route path="/admin" element={<TabelaCRUD />} />
+              <Route path="/recarga" element={<Recarga />} />
+            </Routes>
+          </main>
+        </div>
 
         <Footer />
       </div>
