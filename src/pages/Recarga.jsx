@@ -20,7 +20,7 @@ export default function Recarga() {
       // Substitua pela sua URL do API Gateway (sem o /pagamento no final)
       const API_URL = "https://um4of5exti.execute-api.us-east-1.amazonaws.com/deploy-03/pagamento";
       
-      const response = await fetch(`${API_URL}/pagamento`);
+      const response = await fetch(`${API_URL}`);
       const data = await response.json();
 
       setQrCodeUrl(data.qrcode_url); // Link que vem da Lambda
